@@ -2153,3 +2153,73 @@ async function exportCSV(){
   var filename = 'APEX_Journal_' + dateStr2 + '_' + timeStr2 + '.csv';
   try {
     var tDialog = window.__TAURI__ && window.__TAURI__.dialog;
+    var tFs     = window.__TAURI__ && window.__TAURI__.fs;
+    if(tDialog && tFs){
+      var folder = localStorage.getItem('apexj_csv_folder');
+      if(!folder){
+        folder = await tDialog.open({ directory:true, multiple:false, title:'Choose folder for CSV exports' });
+        if(!folder) return;
+        localStorage.setItem('apexj_csv_folder', folder);
+      }
+      var path = buildFilePath(folder, filename);
+      await tFs.writeTextFile(path, csv);
+      alert('CSV saved:\n' + path);
+      return;
+    }
+  } catch(err){
+    localStorage.removeItem('apexj_csv_folder');
+    alert('Save error: ' + err + '\nFolder reset. Try again.');
+    return;
+  }
+  // Browser fallback
+  var a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+  a.download = filename; a.click();
+}
+
+function importJSON(e){
+  var file = e.target.files[0]; if(!file) return;
+  var r = new FileReader();
+  r.onload = function(ev){
+    try{
+      var d = JSON.parse(ev.target.result);
+      if(!d.trades) throw new Error('Invalid format');
+      if(!confirm('Restore will overwrite all current data. Continue?')) return;
+      trades=d.trades||[]; strategies=d.strategies||[]; instruments=d.instruments||[];
+      if(d.capital) CAPITAL=d.capital;
+      save(); saveStrats(); saveInstrs(); saveCapital();
+      updateTopbar(); renderDashboard(); renderSidebarInstr(); populateFormSelects(); checkConsecLoss();
+      alert('Restored — '+trades.length+' trades, '+strategies.length+' strategies.');
+    } catch(err){ alert('Restore error: '+err.message); }
+  };
+  r.readAsText(file);
+}
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+// Tauri detection → apply scale only in app
+if(window.__TAURI__){document.body.classList.add('is-tauri');}
+// Service Worker registration (PWA)
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('./sw.js').catch(function(){});
+}
+document.getElementById('f-date').value=new Date().toISOString().split('T')[0];
+document.getElementById('tb-startcap').textContent='$'+CAPITAL.toLocaleString('en-US',{minimumFractionDigits:0});
+// backfill missing fields
+trades.forEach(t=>{
+  if(t.dow===undefined&&t.date)t.dow=new Date(t.date).getDay();
+  if(t.qualityClass===undefined)t.qualityClass=classifyQuality(t);
+});
+// Initialize DOW filters: all Mon-Fri active by default
+document.querySelectorAll('.dow-btn').forEach(b=>b.classList.add('dow-on'));
+// Load trader name
+const _tn=localStorage.getItem('apexj_trader_name');if(_tn)document.getElementById('trader-name-display').textContent=_tn;
+populateFormSelects();renderSidebarInstr();updateTopbar();renderDashboard();checkConsecLoss();setMode('quick');
+window.addEventListener('resize',()=>{
+  if(document.getElementById('page-dashboard').classList.contains('active'))drawEquity();
+  if(document.getElementById('page-analytics').classList.contains('active')){const f=getAFiltered();if(f.length)drawPeriodEquity(f);}
+});
+</script>
+</body>
+</html>

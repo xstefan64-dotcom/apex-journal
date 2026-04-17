@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>APEX JOURNAL</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
@@ -366,8 +366,8 @@ textarea{resize:vertical;min-height:72px;font-family:var(--font);font-size:12px;
   display:none;
   position:fixed;
   bottom:0;left:0;right:0;
-  height:56px;
-  padding-bottom:env(safe-area-inset-bottom);
+  height:60px;
+  padding-bottom:8px;
   background:var(--bg1);
   border-top:1px solid var(--border);
   z-index:100;
@@ -395,7 +395,7 @@ textarea{resize:vertical;min-height:72px;font-family:var(--font);font-size:12px;
   .sidebar{display:none!important;}
   .mobile-nav{display:flex!important;}
   .content{
-    padding:14px 12px calc(70px + env(safe-area-inset-bottom)) 12px!important;
+    padding:14px 12px 80px 12px!important;
     overflow-y:auto;
     -webkit-overflow-scrolling:touch;
   }
@@ -428,7 +428,7 @@ textarea{resize:vertical;min-height:72px;font-family:var(--font);font-size:12px;
   .topbar-sep{display:none!important;}
   .topbar-right{margin-left:auto;}
   .topbar-logo{font-size:12px;}
-  .content{padding:10px 8px 70px 8px!important;}
+  .content{padding:10px 8px 80px 8px!important;}
   .hero-card-val{font-size:22px!important;}
   .secondary-stats{grid-template-columns:1fr!important;}
 }

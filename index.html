@@ -245,9 +245,9 @@ textarea{resize:vertical;min-height:72px;font-family:var(--font);font-size:12px;
 .b-gray{background:rgba(255,255,255,0.05);color:var(--t2);}
 
 /* ── DRAWER ── */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:50;display:flex;justify-content:flex-end;backdrop-filter:blur(2px);}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:200;display:flex;justify-content:flex-end;backdrop-filter:blur(2px);}
 .overlay.hidden{display:none;}
-.drawer{width:560px;max-width:100vw;height:100%;background:var(--bg2);border-left:1px solid var(--border);overflow-y:auto;padding:26px;animation:slideIn 0.22s ease;}
+.drawer{width:560px;max-width:100vw;height:100%;background:var(--bg2);border-left:1px solid var(--border);overflow-y:auto;-webkit-overflow-scrolling:touch;padding:26px;animation:slideIn 0.22s ease;}
 @keyframes slideIn{from{transform:translateX(40px);opacity:0;}to{transform:translateX(0);opacity:1;}}
 .drawer-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;}
 .drawer-title{font-size:15px;font-weight:600;}
@@ -356,7 +356,7 @@ textarea{resize:vertical;min-height:72px;font-family:var(--font);font-size:12px;
 .es-cta:hover{background:rgba(88,166,255,0.15);}
 
 /* ── LIGHTBOX ── */
-.lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:999;display:flex;align-items:center;justify-content:center;cursor:zoom-out;backdrop-filter:blur(4px);}
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:300;display:flex;align-items:center;justify-content:center;cursor:zoom-out;backdrop-filter:blur(4px);}
 .lightbox.hidden{display:none;}
 .lightbox img{max-width:92vw;max-height:92vh;border-radius:10px;border:1px solid var(--border2);box-shadow:0 24px 80px rgba(0,0,0,0.8);object-fit:contain;}
 .lightbox-close{position:absolute;top:20px;right:24px;background:var(--bg3);border:1px solid var(--border2);border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;color:var(--t2);cursor:pointer;font-size:16px;transition:all 0.15s;}
@@ -385,7 +385,21 @@ textarea{resize:vertical;min-height:72px;font-family:var(--font);font-size:12px;
 
 /* ── MOBILE (< 768px) ── */
 @media(max-width:768px){
-  .is-tauri .shell{transform:none!important;width:100vw!important;height:100vh!important;}
+  .overlay{align-items:flex-end!important;justify-content:stretch!important;}
+  .drawer{
+    width:100%!important;
+    max-width:100%!important;
+    height:92vh!important;
+    border-left:none!important;
+    border-top:1px solid var(--border)!important;
+    border-radius:16px 16px 0 0!important;
+    animation:slideUp 0.25s ease!important;
+    padding:20px 18px 40px!important;
+  }
+  @keyframes slideUp{from{transform:translateY(40px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+  .drawer-header{position:sticky;top:0;background:var(--bg2);padding-bottom:12px;margin-bottom:4px;z-index:1;}
+  .drawer-header::before{content:'';display:block;width:36px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 14px;}
+}
   .shell{
     grid-template-columns:1fr!important;
     grid-template-rows:48px 1fr!important;
@@ -2209,17 +2223,3 @@ document.getElementById('tb-startcap').textContent='$'+CAPITAL.toLocaleString('e
 // backfill missing fields
 trades.forEach(t=>{
   if(t.dow===undefined&&t.date)t.dow=new Date(t.date).getDay();
-  if(t.qualityClass===undefined)t.qualityClass=classifyQuality(t);
-});
-// Initialize DOW filters: all Mon-Fri active by default
-document.querySelectorAll('.dow-btn').forEach(b=>b.classList.add('dow-on'));
-// Load trader name
-const _tn=localStorage.getItem('apexj_trader_name');if(_tn)document.getElementById('trader-name-display').textContent=_tn;
-populateFormSelects();renderSidebarInstr();updateTopbar();renderDashboard();checkConsecLoss();setMode('quick');
-window.addEventListener('resize',()=>{
-  if(document.getElementById('page-dashboard').classList.contains('active'))drawEquity();
-  if(document.getElementById('page-analytics').classList.contains('active')){const f=getAFiltered();if(f.length)drawPeriodEquity(f);}
-});
-</script>
-</body>
-</html>

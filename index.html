@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>APEX JOURNAL</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
@@ -367,6 +367,7 @@ textarea{resize:vertical;min-height:72px;font-family:var(--font);font-size:12px;
   position:fixed;
   bottom:0;left:0;right:0;
   height:56px;
+  padding-bottom:env(safe-area-inset-bottom);
   background:var(--bg1);
   border-top:1px solid var(--border);
   z-index:100;
@@ -394,7 +395,7 @@ textarea{resize:vertical;min-height:72px;font-family:var(--font);font-size:12px;
   .sidebar{display:none!important;}
   .mobile-nav{display:flex!important;}
   .content{
-    padding:14px 12px 70px 12px!important;
+    padding:14px 12px calc(70px + env(safe-area-inset-bottom)) 12px!important;
     overflow-y:auto;
     -webkit-overflow-scrolling:touch;
   }
@@ -995,6 +996,69 @@ textarea{resize:vertical;min-height:72px;font-family:var(--font);font-size:12px;
   </div>
 </div>
 
+<!-- ═══ MORE (mobile) ═══ -->
+<div class="page" id="page-more">
+  <div class="page-header">
+    <div><div class="page-title">More</div><div class="page-sub">Data, settings &amp; navigation</div></div>
+  </div>
+
+  <!-- DATA -->
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:16px;">
+    <div style="padding:12px 16px;background:var(--bg3);border-bottom:1px solid var(--border);font-size:9px;font-family:var(--mono);color:var(--t3);text-transform:uppercase;letter-spacing:0.1em;">Data &amp; Backup</div>
+    <div style="padding:8px;">
+      <button class="btn" style="width:100%;text-align:left;padding:14px 16px;margin-bottom:6px;display:flex;align-items:center;gap:12px;" onclick="exportJSON()">
+        <span style="font-size:18px;">&#8659;</span>
+        <div><div style="font-size:13px;font-weight:600;color:var(--t1);">Backup JSON</div><div style="font-size:11px;color:var(--t3);font-family:var(--mono);">Save all trades &amp; settings</div></div>
+      </button>
+      <label class="btn" style="width:100%;text-align:left;padding:14px 16px;margin-bottom:6px;display:flex;align-items:center;gap:12px;cursor:pointer;">
+        <span style="font-size:18px;">&#8657;</span>
+        <div><div style="font-size:13px;font-weight:600;color:var(--t1);">Restore Backup</div><div style="font-size:11px;color:var(--t3);font-family:var(--mono);">Load from JSON file</div></div>
+        <input type="file" accept=".json" style="display:none" onchange="importJSON(event)">
+      </label>
+      <button class="btn" style="width:100%;text-align:left;padding:14px 16px;display:flex;align-items:center;gap:12px;" onclick="exportCSV()">
+        <span style="font-size:18px;">&#9776;</span>
+        <div><div style="font-size:13px;font-weight:600;color:var(--t1);">Export CSV</div><div style="font-size:11px;color:var(--t3);font-family:var(--mono);">Spreadsheet for Excel / Numbers</div></div>
+      </button>
+    </div>
+  </div>
+
+  <!-- NAVIGATE -->
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:16px;">
+    <div style="padding:12px 16px;background:var(--bg3);border-bottom:1px solid var(--border);font-size:9px;font-family:var(--mono);color:var(--t3);text-transform:uppercase;letter-spacing:0.1em;">Setup</div>
+    <div style="padding:8px;">
+      <button class="btn" style="width:100%;text-align:left;padding:14px 16px;margin-bottom:6px;display:flex;align-items:center;gap:12px;" onclick="nav('strategies')">
+        <span style="font-size:18px;">&#9670;</span>
+        <div><div style="font-size:13px;font-weight:600;color:var(--t1);">Strategies</div><div style="font-size:11px;color:var(--t3);font-family:var(--mono);">Manage your setups &amp; conditions</div></div>
+        <span style="margin-left:auto;color:var(--t3);">›</span>
+      </button>
+      <button class="btn" style="width:100%;text-align:left;padding:14px 16px;display:flex;align-items:center;gap:12px;" onclick="nav('instruments')">
+        <span style="font-size:18px;">&#9632;</span>
+        <div><div style="font-size:13px;font-weight:600;color:var(--t1);">Instruments</div><div style="font-size:11px;color:var(--t3);font-family:var(--mono);">Manage your markets</div></div>
+        <span style="margin-left:auto;color:var(--t3);">›</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- CAPITAL -->
+  <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:16px;">
+    <div style="padding:12px 16px;background:var(--bg3);border-bottom:1px solid var(--border);font-size:9px;font-family:var(--mono);color:var(--t3);text-transform:uppercase;letter-spacing:0.1em;">Account</div>
+    <div style="padding:8px;">
+      <button class="btn" style="width:100%;text-align:left;padding:14px 16px;margin-bottom:6px;display:flex;align-items:center;gap:12px;" onclick="editCapital()">
+        <span style="font-size:18px;">&#9998;</span>
+        <div><div style="font-size:13px;font-weight:600;color:var(--t1);">Edit Starting Capital</div><div style="font-size:11px;color:var(--t3);font-family:var(--mono);" id="more-cap-display">$50,000</div></div>
+      </button>
+      <button class="btn" style="width:100%;text-align:left;padding:14px 16px;display:flex;align-items:center;gap:12px;" onclick="editTraderName()">
+        <span style="font-size:18px;">&#128100;</span>
+        <div><div style="font-size:13px;font-weight:600;color:var(--t1);">Edit Name</div><div style="font-size:11px;color:var(--t3);font-family:var(--mono);" id="more-name-display">Your Name</div></div>
+      </button>
+    </div>
+  </div>
+
+  <div style="text-align:center;padding:16px 0;font-size:8px;font-family:var(--mono);color:var(--t3);opacity:0.4;letter-spacing:0.08em;">
+    Built for traders by Stefan Ivan
+  </div>
+</div>
+
 </main>
 
 <!-- MOBILE BOTTOM NAV -->
@@ -1014,8 +1078,8 @@ textarea{resize:vertical;min-height:72px;font-family:var(--font);font-size:12px;
     <svg viewBox="0 0 16 16" fill="currentColor"><path d="M11 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h1V7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7h1V2z"/></svg>
     Stats
   </button>
-  <button class="mn-item" id="mn-strategies" onclick="nav('strategies')">
-    <svg viewBox="0 0 16 16" fill="currentColor"><path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h11A1.5 1.5 0 0 1 15 2.5v2A1.5 1.5 0 0 1 13.5 6h-11A1.5 1.5 0 0 1 1 4.5v-2zm1 7A1.5 1.5 0 0 1 3.5 8h9A1.5 1.5 0 0 1 14 9.5v2a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 11.5v-2z"/></svg>
+  <button class="mn-item" id="mn-more" onclick="nav('more')">
+    <svg viewBox="0 0 16 16" fill="currentColor"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/></svg>
     More
   </button>
 </nav>
@@ -1223,6 +1287,12 @@ function nav(id){
   if(id==='analytics')renderAnalytics();
   if(id==='strategies')renderStratManager();
   if(id==='instruments')renderInstrManager();
+  if(id==='more'){
+    const capEl=document.getElementById('more-cap-display');
+    const nmEl=document.getElementById('more-name-display');
+    if(capEl)capEl.textContent='$'+CAPITAL.toLocaleString('en-US',{minimumFractionDigits:0});
+    if(nmEl)nmEl.textContent=localStorage.getItem('apexj_trader_name')||'Your Name';
+  }
   if(id==='add'){document.getElementById('add-title').textContent=editId?'Edit Trade':'Log Trade';populateFormSelects();}
 }
 function filterAndGo(symbol){
@@ -2083,73 +2153,3 @@ async function exportCSV(){
   var filename = 'APEX_Journal_' + dateStr2 + '_' + timeStr2 + '.csv';
   try {
     var tDialog = window.__TAURI__ && window.__TAURI__.dialog;
-    var tFs     = window.__TAURI__ && window.__TAURI__.fs;
-    if(tDialog && tFs){
-      var folder = localStorage.getItem('apexj_csv_folder');
-      if(!folder){
-        folder = await tDialog.open({ directory:true, multiple:false, title:'Choose folder for CSV exports' });
-        if(!folder) return;
-        localStorage.setItem('apexj_csv_folder', folder);
-      }
-      var path = buildFilePath(folder, filename);
-      await tFs.writeTextFile(path, csv);
-      alert('CSV saved:\n' + path);
-      return;
-    }
-  } catch(err){
-    localStorage.removeItem('apexj_csv_folder');
-    alert('Save error: ' + err + '\nFolder reset. Try again.');
-    return;
-  }
-  // Browser fallback
-  var a = document.createElement('a');
-  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
-  a.download = filename; a.click();
-}
-
-function importJSON(e){
-  var file = e.target.files[0]; if(!file) return;
-  var r = new FileReader();
-  r.onload = function(ev){
-    try{
-      var d = JSON.parse(ev.target.result);
-      if(!d.trades) throw new Error('Invalid format');
-      if(!confirm('Restore will overwrite all current data. Continue?')) return;
-      trades=d.trades||[]; strategies=d.strategies||[]; instruments=d.instruments||[];
-      if(d.capital) CAPITAL=d.capital;
-      save(); saveStrats(); saveInstrs(); saveCapital();
-      updateTopbar(); renderDashboard(); renderSidebarInstr(); populateFormSelects(); checkConsecLoss();
-      alert('Restored — '+trades.length+' trades, '+strategies.length+' strategies.');
-    } catch(err){ alert('Restore error: '+err.message); }
-  };
-  r.readAsText(file);
-}
-
-// ══════════════════════════════════════════
-// INIT
-// ══════════════════════════════════════════
-// Tauri detection → apply scale only in app
-if(window.__TAURI__){document.body.classList.add('is-tauri');}
-// Service Worker registration (PWA)
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('./sw.js').catch(function(){});
-}
-document.getElementById('f-date').value=new Date().toISOString().split('T')[0];
-document.getElementById('tb-startcap').textContent='$'+CAPITAL.toLocaleString('en-US',{minimumFractionDigits:0});
-// backfill missing fields
-trades.forEach(t=>{
-  if(t.dow===undefined&&t.date)t.dow=new Date(t.date).getDay();
-  if(t.qualityClass===undefined)t.qualityClass=classifyQuality(t);
-});
-// Initialize DOW filters: all Mon-Fri active by default
-document.querySelectorAll('.dow-btn').forEach(b=>b.classList.add('dow-on'));
-// Load trader name
-const _tn=localStorage.getItem('apexj_trader_name');if(_tn)document.getElementById('trader-name-display').textContent=_tn;
-populateFormSelects();renderSidebarInstr();updateTopbar();renderDashboard();checkConsecLoss();setMode('quick');
-window.addEventListener('resize',()=>{
-  if(document.getElementById('page-dashboard').classList.contains('active'))drawEquity();
-  if(document.getElementById('page-analytics').classList.contains('active')){const f=getAFiltered();if(f.length)drawPeriodEquity(f);}
-});
-</script>
-</body>
-</html>

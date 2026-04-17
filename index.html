@@ -369,7 +369,9 @@ textarea{resize:vertical;min-height:72px;font-family:var(--font);font-size:12px;
 .mn-item svg{width:18px;height:18px;flex-shrink:0;}
 .mn-add-circle{width:42px;height:42px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:22px;color:#fff;box-shadow:0 4px 16px rgba(88,166,255,0.35);}
 
-/* ── TABLET ── */
+/* tb-mobile hidden by default, shown in media query */
+.tb-mobile{display:none!important;}
+.tb-mobile-sep{display:none!important;}
 @media(max-width:1024px){.shell{grid-template-columns:180px 1fr!important;}}
 
 /* ── MOBILE ── */
@@ -377,6 +379,7 @@ textarea{resize:vertical;min-height:72px;font-family:var(--font);font-size:12px;
   /* topbar */
   .tb-desktop{display:none!important;}
   .tb-mobile{display:flex!important;}
+  .tb-mobile-sep{display:block!important;}
   /* shell */
   .is-tauri .shell{transform:none!important;width:100vw!important;height:100vh!important;}
   .shell{grid-template-columns:1fr!important;grid-template-rows:48px 1fr!important;width:100vw!important;height:100vh!important;}
@@ -454,14 +457,13 @@ textarea{resize:vertical;min-height:72px;font-family:var(--font);font-size:12px;
   <div class="topbar-stat tb-desktop"><div class="ts-label">Profit Factor</div><div class="ts-val" id="tb-pf">—</div></div>
   <!-- Mobile only: PnL in topbar — moved to right side near name -->
   <div class="topbar-right">
-    <!-- Mobile PnL + name group -->
     <div style="display:flex;align-items:center;gap:10px;">
-      <div class="tb-mobile" style="display:none;flex-direction:column;align-items:flex-end;gap:1px;">
+      <div class="tb-mobile" style="flex-direction:column;align-items:flex-end;gap:1px;">
         <div class="ts-label">P&amp;L</div>
         <div class="ts-val" id="tb-balance-mobile">$0.00</div>
       </div>
-      <div style="width:1px;height:20px;background:var(--border);flex-shrink:0;" class="tb-mobile" style="display:none;"></div>
-      <div style="display:flex;flex-direction:column;align-items:flex-end;cursor:pointer;" onclick="editTraderName()" title="Click to edit your name">
+      <div class="tb-mobile-sep" style="width:1px;height:20px;background:var(--border);flex-shrink:0;"></div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;cursor:pointer;" onclick="editTraderName()">
         <div style="font-family:var(--mono);font-size:11px;font-weight:600;color:var(--t1);letter-spacing:0.06em;" id="trader-name-display">Your Name</div>
         <div style="font-size:8px;font-family:var(--mono);color:var(--t3);letter-spacing:0.14em;text-transform:uppercase;">Trader ✎</div>
       </div>

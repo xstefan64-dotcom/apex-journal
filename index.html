@@ -65,7 +65,9 @@ html,body{height:100%;background:var(--bg0);color:var(--t1);font-family:var(--fo
 .ts-label{font-size:9px;font-family:var(--mono);color:var(--t3);text-transform:uppercase;letter-spacing:0.08em;text-align:center;}
 .ts-val{font-size:12px;font-family:var(--mono);font-weight:600;text-align:center;}
 .ts-val.pos{color:var(--green);}.ts-val.neg{color:var(--red);}.ts-val.neu{color:var(--t2);}
-.topbar-right{margin-left:auto;display:flex;gap:8px;align-items:center;}
+.topbar-right{margin-left:auto;display:flex;gap:8px;align-items:center;flex-shrink:0;}
+/* tb-mobile hidden on desktop, shown on mobile */
+.tb-mobile{display:none!important;}
 
 /* ── SIDEBAR ── */
 .sidebar-section{padding:10px 0;}
@@ -370,8 +372,7 @@ textarea{resize:vertical;min-height:72px;font-family:var(--font);font-size:12px;
 .mn-add-circle{width:42px;height:42px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:22px;color:#fff;box-shadow:0 4px 16px rgba(88,166,255,0.35);}
 
 /* tb-mobile hidden by default, shown in media query */
-.tb-mobile{display:none!important;}
-.tb-mobile-sep{display:none!important;}
+/* tb-mobile shown on mobile */
 @media(max-width:1024px){.shell{grid-template-columns:180px 1fr!important;}}
 
 /* ── MOBILE ── */
@@ -379,7 +380,6 @@ textarea{resize:vertical;min-height:72px;font-family:var(--font);font-size:12px;
   /* topbar */
   .tb-desktop{display:none!important;}
   .tb-mobile{display:flex!important;}
-  .tb-mobile-sep{display:block!important;}
   /* shell */
   .is-tauri .shell{transform:none!important;width:100vw!important;height:100vh!important;}
   .shell{grid-template-columns:1fr!important;grid-template-rows:48px 1fr!important;width:100vw!important;height:100vh!important;}
@@ -457,18 +457,18 @@ textarea{resize:vertical;min-height:72px;font-family:var(--font);font-size:12px;
   <div class="topbar-stat tb-desktop"><div class="ts-label">Profit Factor</div><div class="ts-val" id="tb-pf">—</div></div>
   <!-- Mobile only: PnL in topbar — moved to right side near name -->
   <div class="topbar-right">
-    <div style="display:flex;align-items:center;gap:10px;">
-      <div class="tb-mobile" style="flex-direction:column;align-items:flex-end;gap:1px;">
-        <div class="ts-label">P&amp;L</div>
-        <div class="ts-val" id="tb-balance-mobile">$0.00</div>
+    <!-- Right group: PnL + name always together -->
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div class="tb-mobile" style="flex-direction:column;align-items:flex-end;gap:0px;border-right:1px solid var(--border);padding-right:8px;">
+        <div style="font-size:9px;font-family:var(--mono);color:var(--t3);text-transform:uppercase;letter-spacing:0.08em;">P&amp;L</div>
+        <div class="ts-val" id="tb-balance-mobile" style="font-size:12px;">$0.00</div>
       </div>
-      <div class="tb-mobile-sep" style="width:1px;height:20px;background:var(--border);flex-shrink:0;"></div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;cursor:pointer;" onclick="editTraderName()">
-        <div style="font-family:var(--mono);font-size:11px;font-weight:600;color:var(--t1);letter-spacing:0.06em;" id="trader-name-display">Your Name</div>
+        <div style="font-family:var(--mono);font-size:11px;font-weight:600;color:var(--t1);letter-spacing:0.06em;white-space:nowrap;" id="trader-name-display">Your Name</div>
         <div style="font-size:8px;font-family:var(--mono);color:var(--t3);letter-spacing:0.14em;text-transform:uppercase;">Trader ✎</div>
       </div>
     </div>
-    <div style="width:1px;height:20px;background:var(--border);flex-shrink:0;margin:0 2px;" class="tb-desktop"></div>
+    <div style="width:1px;height:20px;background:var(--border);flex-shrink:0;margin:0 4px;" class="tb-desktop"></div>
     <button class="btn btn-sm tb-desktop" onclick="exportJSON()" id="btn-backup">&#8659; Backup</button>
     <label class="btn btn-sm tb-desktop" style="cursor:pointer;">&#8657; Restore<input type="file" accept=".json" style="display:none" onchange="importJSON(event)"></label>
     <button class="btn btn-sm tb-desktop" onclick="exportCSV()" id="btn-csv">&#8659; Export CSV</button>
